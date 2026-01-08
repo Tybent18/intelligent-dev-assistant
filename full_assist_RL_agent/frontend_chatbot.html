@@ -1,0 +1,12 @@
+<input type="text" id="query" placeholder="Ask the assistant...">
+<button onclick="ask()">Send</button>
+<div id="answer"></div>
+
+<script>
+function ask() {
+    let q = document.getElementById('query').value;
+    axios.post('/query', {query: q}).then(res => {
+        document.getElementById('answer').innerHTML = res.data.answer;
+    });
+}
+</script>
