@@ -2,14 +2,12 @@
 <html>
 <head>
     <title>Nano Ink Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: Arial; margin: 40px; }
-        table { border-collapse: collapse; width: 60%; margin-bottom: 30px; }
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        table { border-collapse: collapse; width: 60%; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
         th { background-color: #f2f2f2; }
         .recommend { color: red; font-weight: bold; }
-        #chat { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -19,62 +17,17 @@
         <tr>
             <th>Lab</th>
             <th>Current Stock</th>
-            <th>Total Usage</th>
+            <th>Ink Used</th>
             <th>Reorder Recommendation</th>
         </tr>
         {% for lab, info in labs.items() %}
         <tr>
             <td>{{ lab }}</td>
             <td>{{ info.current_stock }}</td>
-            <td>{{ info.ink_used | sum }}</td>
+            <td>{{ info.ink_used }}</td>
             <td class="recommend">{{ recommendations.get(lab, "None") }}</td>
         </tr>
         {% endfor %}
     </table>
-
-    <canvas id="usageChart" width="600" height="300"></canvas>
-
-    <h2>Chat with AI Assistant</h2>
-    <div id="chat">
-        <input type="text" id="userInput" placeholder="Ask about lab stock or reorder..." style="width: 300px;">
-        <button onclick="sendMessage()">Send</button>
-        <div id="chatResponse" style="margin-top:10px;"></div>
-    </div>
-
-<script>
-    // Chart.js visualization
-    const ctx = document.getElementById('usageChart').getContext('2d');
-    const usageChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [{% for lab in labs %}'{{ lab }}',{% endfor %}],
-            datasets: [{
-                label: 'Total Usage',
-                data: [{% for lab, info in labs.items() %}{{ info.ink_used | sum }},{% endfor %}],
-                backgroundColor: 'rgba(54, 162, 235, 0.6)'
-            },
-            {
-                label: 'Current Stock',
-                data: [{% for lab, info in labs.items() %}{{ info.current_stock }},{% endfor %}],
-                backgroundColor: 'rgba(255, 99, 132, 0.6)'
-            }]
-        },
-        options: { scales: { y: { beginAtZero: true } } }
-    });
-
-    // Chatbot
-    function sendMessage() {
-        const message = document.getElementById('userInput').value;
-        fetch("/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({message: message})
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('chatResponse').innerHTML = data.response;
-        });
-    }
-</script>
 </body>
 </html>
