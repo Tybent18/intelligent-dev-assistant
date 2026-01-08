@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nano Ink Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Nano Ink Distribution Dashboard</h1>
+    <div id="stock"></div>
+    <div id="action"></div>
+    <div id="reward"></div>
+    <button onclick="step()">Next Step</button>
+
+    <script>
+        function step() {
+            axios.post('/step').then(response => {
+                document.getElementById('stock').innerHTML = 'Current Stock: ' + response.data.stock;
+                document.getElementById('action').innerHTML = 'Recommended Delivery: ' + response.data.action;
+                document.getElementById('reward').innerHTML = 'Reward: ' + response.data.reward;
+            });
+        }
+
+        // Initial display
+        step();
+    </script>
+</body>
+</html>
