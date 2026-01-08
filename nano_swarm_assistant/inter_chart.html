@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nano Ink Swarm AI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Nano Ink Inventory Dashboard</h1>
+
+<table border="1">
+<tr><th>Lab</th><th>Current Stock</th></tr>
+{% for lab, s in zip(labs, stock) %}
+<tr><td>{{ lab }}</td><td>{{ s }}</td></tr>
+{% endfor %}
+</table>
+
+<canvas id="stockChart" width="600" height="300"></canvas>
+
+<h2>Chat with Assistant</h2>
+<input type="text" id="userInput" placeholder="Ask about lab stock...">
+<button onclick="sendMessage()">Send</button>
+<div id="chatResponse"></div>
+
+<h2>AI Recommendations</h2>
+<button onclick="getRecommendation()">Get AI Recommendation</button>
+<div id="recommendation"></div>
+
+<script>
+const ctx = document.getElementById('stockChart').getContext('2d');
+const stockChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ labs|tojson }},
+        datasets: [{
+            label: 'Current Stock',
+            data: {{ stock|tojson }},
+            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+        }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+});
+
+function sendMessage(){
+    const msg = document.getElementById('userInput').value;
+    fetch('/chat', {
+        method:'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({message: msg})
+    }).then(res=>res.json()).then(data=>{
+        document.getElementById('chatResponse').innerText = data.response;
+    });
+}
+
+function getRecommendation(){
+    fetch('/recommend').then(res=>res.json()).then(data=>{
+        document.getElementById('recommendation').innerText =
+            "AI Suggests sending: " + data.action.join(', ') +
+            " units. Predicted stock: " + data.predicted_stock.join(', ') +
+            ". Reward: " + data.reward;
+    });
+}
+</script>
+</body>
+</html>
