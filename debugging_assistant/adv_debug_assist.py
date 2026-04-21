@@ -1,152 +1,152 @@
+#languages portion
+
 import subprocess
 import tempfile
 import os
-import ast
-import traceback
-import openai
 
-# ---------------- CONFIG ----------------
-openai.api_key = "YOUR_OPENAI_API_KEY_HERE"  # Replace with your key
-
-# ---------------- UTILITY FUNCTIONS ----------------
-
-# --- Python Utilities ---
-def python_syntax_check(code_text):
-    try:
-        ast.parse(code_text)
-        return True, "No Python syntax errors."
-    except SyntaxError as e:
-        msg = f"Python Syntax Error: {e.msg} at line {e.lineno}"
-        return False, msg
-
-def python_safe_run(code_text):
-    try:
-        exec(code_text, {})
-        return True, "Python code executed successfully."
-    except Exception as e:
-        tb = traceback.format_exc()
-        return False, f"Python Runtime Error: {type(e).__name__}: {e}\n{tb}"
-
-# --- C Utilities ---
-def compile_and_run_c(code_text):
+def run_c(code_text):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".c") as tmpfile:
         tmpfile.write(code_text.encode())
-        tmpfile_path = tmpfile.name
+        tmp_path = tmpfile.name
 
-    executable = tmpfile_path.replace(".c", "")
-    compile_cmd = ["gcc", tmpfile_path, "-o", executable]
-    compile_result = subprocess.run(compile_cmd, capture_output=True, text=True)
+    executable = tmp_path.replace(".c", "")
+
+    compile_result = subprocess.run(
+        ["gcc", tmp_path, "-o", executable],
+        capture_output=True,
+        text=True
+    )
 
     if compile_result.returncode != 0:
-        os.remove(tmpfile_path)
-        return False, f"C Compilation Error:\n{compile_result.stderr}"
+        os.remove(tmp_path)
+        return False, compile_result.stderr
 
-    run_result = subprocess.run([executable], capture_output=True, text=True)
-    os.remove(tmpfile_path)
+    run_result = subprocess.run(
+        [executable],
+        capture_output=True,
+        text=True
+    )
+
+    os.remove(tmp_path)
     os.remove(executable)
 
     if run_result.returncode != 0:
-        return False, f"C Runtime Error:\n{run_result.stderr}"
-    return True, f"C Output:\n{run_result.stdout}"
+        return False, run_result.stderr
 
-# --- Java Utilities ---
-def compile_and_run_java(code_text, class_name="Main"):
+    return True, run_result.stdout
+
+
+def run_java(code_text, class_name="Main"):
     with tempfile.TemporaryDirectory() as tmpdir:
-        java_file_path = os.path.join(tmpdir, f"{class_name}.java")
-        with open(java_file_path, "w") as f:
+        java_path = os.path.join(tmpdir, f"{class_name}.java")
+
+        with open(java_path, "w") as f:
             f.write(code_text)
 
         compile_result = subprocess.run(
-            ["javac", java_file_path],
-            capture_output=True, text=True
+            ["javac", java_path],
+            capture_output=True,
+            text=True
         )
 
         if compile_result.returncode != 0:
-            return False, f"Java Compilation Error:\n{compile_result.stderr}"
+            return False, compile_result.stderr
 
         run_result = subprocess.run(
             ["java", "-cp", tmpdir, class_name],
-            capture_output=True, text=True
+            capture_output=True,
+            text=True
         )
 
         if run_result.returncode != 0:
-            return False, f"Java Runtime Error:\n{run_result.stderr}"
-        return True, f"Java Output:\n{run_result.stdout}"
+            return False, run_result.stderr
 
-# --- AI Suggestion Utility ---
-def ai_suggest_fix(code_text, error_msg, language="Python"):
-    prompt = f"""
-I have the following {language} code:
+        return True, run_result.stdout
 
-{code_text}
+#Python Execution
 
-It produced this error:
+import subprocess
+import tempfile
 
-{error_msg}
+def run_python(code_text):
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+        f.write(code_text)
+        path = f.name
 
-Please explain why this error occurred and provide a corrected version.
-"""
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.2
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"AI suggestion failed: {e}"
+    result = subprocess.run(
+        ["python", path],
+        capture_output=True,
+        text=True
+    )
 
-# ---------------- DEBUGGING FUNCTION ----------------
-def debug_code(code_text, language):
-    print(f"\n--- Debugging {language} code ---")
-    if language.lower() == "python":
-        syntax_ok, syntax_msg = python_syntax_check(code_text)
-        print(syntax_msg)
-        if not syntax_ok:
-            print("\n--- AI Suggestion ---")
-            print(ai_suggest_fix(code_text, syntax_msg, "Python"))
+    if result.returncode == 0:
+        return True, result.stdout or "Execution successful"
+    else:
+        return False, result.stderr
+
+#Clean CLI
+
+from core.analyzer import check_syntax
+from core.executor import run_python
+from core.languages import run_c, run_java
+from core.ai_suggester import ai_suggest_fix
+
+
+def debug(code, language, use_ai=True):
+    print(f"\n=== DEBUGGING {language.upper()} ===")
+
+    if language == "python":
+        ok, msg = check_syntax(code)
+        print(msg)
+
+        if not ok:
+            if use_ai:
+                print("\n=== AI SUGGESTION ===")
+                print(ai_suggest_fix(code, msg, "Python"))
             return
 
-        runtime_ok, runtime_msg = python_safe_run(code_text)
-        print(runtime_msg)
-        if not runtime_ok:
-            print("\n--- AI Suggestion ---")
-            print(ai_suggest_fix(code_text, runtime_msg, "Python"))
+        ok, msg = run_python(code)
+        print(msg)
 
-    elif language.lower() == "c":
-        success, result_msg = compile_and_run_c(code_text)
-        print(result_msg)
-        if not success:
-            print("\n--- AI Suggestion ---")
-            print(ai_suggest_fix(code_text, result_msg, "C"))
+    elif language == "c":
+        ok, msg = run_c(code)
+        print(msg)
 
-    elif language.lower() == "java":
-        success, result_msg = compile_and_run_java(code_text)
-        print(result_msg)
-        if not success:
-            print("\n--- AI Suggestion ---")
-            print(ai_suggest_fix(code_text, result_msg, "Java"))
+    elif language == "java":
+        ok, msg = run_java(code)
+        print(msg)
 
     else:
-        print(f"Language {language} not supported yet.")
+        print("Unsupported language.")
+        return
 
-# ---------------- MAIN LOOP ----------------
-print("Multi-Language AI Debugging Assistant")
-print("Supported languages: Python, C, Java")
-print("Paste your code, type 'exit' as language to quit.\n")
+    if not ok and use_ai:
+        print("\n=== AI SUGGESTION ===")
+        print(ai_suggest_fix(code, msg, language))
 
-while True:
-    language = input("Enter language (python/c/java): ").strip().lower()
-    if language == "exit":
-        print("Exiting AI Debugger.")
-        break
 
-    code_input = ""
-    print("Enter your code (end with an empty line):")
+def run_cli():
+    print("AI Debugger (Python, C, Java)")
+
     while True:
-        line = input()
-        if line.strip() == "":
+        lang = input("\nLanguage (python/c/java or exit): ").lower()
+        if lang == "exit":
             break
-        code_input += line + "\n"
 
-    debug_code(code_input, language)
+        print("Paste code (end with empty line):")
+        code = ""
+
+        while True:
+            line = input()
+            if line.strip() == "":
+                break
+            code += line + "\n"
+
+        debug(code, lang)
+
+#Entry Point
+
+from interface.cli import run_cli
+
+if __name__ == "__main__":
+    run_cli()
