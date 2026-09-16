@@ -55,6 +55,9 @@ function speak(text) {
   utterance.rate = .94;
   utterance.pitch = .82;
   utterance.volume = .75;
+  utterance.addEventListener("start", () => $("#holoCore").classList.add("speaking"));
+  utterance.addEventListener("end", () => $("#holoCore").classList.remove("speaking"));
+  utterance.addEventListener("error", () => $("#holoCore").classList.remove("speaking"));
   speechSynthesis.speak(utterance);
 }
 
@@ -137,4 +140,3 @@ if (SpeechRecognition) {
   $("#micButton").disabled = true;
   $("#micButton").title = "Voice recognition is unavailable in this browser";
 }
-

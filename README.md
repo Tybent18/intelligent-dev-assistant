@@ -7,7 +7,7 @@ Obsidian is a local-first developer intelligence laboratory with a cinematic, sc
 ## What works now
 
 - Animated spatial HoloLab interface
-- Obsidian holographic core and project constellation
+- Full speech-reactive Obsidian humanoid avatar with holographic facial planes, neural constellations, scanning reconstruction, and project constellation
 - Text commands and quick actions
 - Browser speech recognition when supported
 - Browser speech synthesis
@@ -87,4 +87,3 @@ Read the full [architecture](docs/ARCHITECTURE.md) and [safety boundary](docs/SA
 ## License
 
 The repository retains its existing license. Third-party model or hardware integrations may introduce additional terms.
-

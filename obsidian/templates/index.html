@@ -35,10 +35,101 @@
       <div class="orbit orbit-a"></div>
       <div class="orbit orbit-b"></div>
       <div class="orbit orbit-c"></div>
-      <div class="holo-core" id="holoCore">
-        <div class="core-shell"></div>
-        <div class="core-eye"></div>
-        <div class="core-grid"></div>
+      <div class="holo-core" id="holoCore" aria-label="Obsidian holographic avatar">
+        <div class="avatar-aura"></div>
+        <svg class="obsidian-avatar" viewBox="0 0 340 420" role="img" aria-label="Obsidian, a luminous synthetic humanoid">
+          <defs>
+            <linearGradient id="skinLight" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#c6fbff" stop-opacity=".94"/>
+              <stop offset=".28" stop-color="#38dfff" stop-opacity=".82"/>
+              <stop offset=".68" stop-color="#1554a8" stop-opacity=".72"/>
+              <stop offset="1" stop-color="#030914" stop-opacity=".96"/>
+            </linearGradient>
+            <linearGradient id="shadowPlane" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#07111f" stop-opacity=".1"/>
+              <stop offset="1" stop-color="#02050c" stop-opacity=".92"/>
+            </linearGradient>
+            <radialGradient id="chestCore">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset=".22" stop-color="#69f5ff"/>
+              <stop offset=".58" stop-color="#2579ff" stop-opacity=".85"/>
+              <stop offset="1" stop-color="#020711" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="avatarGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="11"/>
+            </filter>
+            <clipPath id="headClip">
+              <path d="M104 55 Q170 3 236 55 L250 132 Q246 215 170 262 Q94 215 90 132Z"/>
+            </clipPath>
+          </defs>
+
+          <g class="avatar-ghost ghost-one" aria-hidden="true">
+            <path d="M60 420 Q67 321 122 284 L135 245 Q91 214 91 130 Q91 50 170 27 Q249 50 249 130 Q249 214 205 245 L218 284 Q273 321 280 420Z" fill="none" stroke="#42eaff" stroke-width="2"/>
+          </g>
+
+          <g class="avatar-body">
+            <path class="shoulders" d="M30 420 Q36 335 113 298 L137 278 L203 278 L227 298 Q304 335 310 420Z" fill="url(#skinLight)" stroke="#54efff" stroke-width="2"/>
+            <path d="M30 420 Q36 335 113 298 L151 420Z" fill="#07213d" opacity=".68"/>
+            <path d="M310 420 Q304 335 227 298 L189 420Z" fill="#020812" opacity=".72"/>
+            <path class="neck" d="M130 218 L125 296 Q170 331 215 296 L210 218Z" fill="url(#skinLight)" stroke="#44dfff" stroke-width="1.5"/>
+            <path d="M130 237 Q170 274 210 237 L205 265 Q170 296 135 265Z" fill="#03101d" opacity=".58"/>
+
+            <path class="head" d="M104 55 Q170 3 236 55 L250 132 Q246 215 170 262 Q94 215 90 132Z" fill="url(#skinLight)" stroke="#72f6ff" stroke-width="2.4"/>
+            <g clip-path="url(#headClip)">
+              <path d="M169 16 L274 48 L248 250 L170 262Z" fill="url(#shadowPlane)"/>
+              <path d="M78 129 Q170 92 262 129" fill="none" stroke="#c8ffff" stroke-opacity=".21" stroke-width="1"/>
+              <path d="M77 151 Q170 119 263 151" fill="none" stroke="#c8ffff" stroke-opacity=".16" stroke-width="1"/>
+              <path d="M82 176 Q170 151 258 176" fill="none" stroke="#c8ffff" stroke-opacity=".13" stroke-width="1"/>
+              <path d="M92 203 Q170 184 248 203" fill="none" stroke="#c8ffff" stroke-opacity=".1" stroke-width="1"/>
+              <g class="neural-map" fill="#9bfbff" filter="url(#avatarGlow)">
+                <circle cx="119" cy="82" r="2.1"/><circle cx="145" cy="56" r="1.7"/><circle cx="188" cy="46" r="2"/>
+                <circle cx="219" cy="73" r="1.5"/><circle cx="231" cy="113" r="2"/><circle cx="205" cy="141" r="1.6"/>
+                <circle cx="133" cy="142" r="1.8"/><circle cx="111" cy="183" r="1.4"/><circle cx="171" cy="205" r="2"/>
+              </g>
+              <g class="neural-lines" fill="none" stroke="#53edff" stroke-opacity=".42" stroke-width=".8">
+                <path d="M119 82 L145 56 L188 46 L219 73 L231 113 L205 141 L171 205 L133 142 L111 183"/>
+                <path d="M119 82 L133 142 L205 141 L188 46"/>
+              </g>
+            </g>
+
+            <path class="brow" d="M112 121 Q137 103 157 119" fill="none" stroke="#b9fbff" stroke-width="3"/>
+            <path class="brow" d="M183 119 Q205 103 229 121" fill="none" stroke="#69eaff" stroke-width="3"/>
+            <g class="eyes" filter="url(#avatarGlow)">
+              <path d="M112 132 Q135 113 158 132 Q135 148 112 132Z" fill="#eaffff" stroke="#5ff4ff" stroke-width="2"/>
+              <path d="M182 132 Q205 113 228 132 Q205 148 182 132Z" fill="#eaffff" stroke="#5ff4ff" stroke-width="2"/>
+              <circle cx="136" cy="132" r="5" fill="#071524"/><circle cx="204" cy="132" r="5" fill="#071524"/>
+            </g>
+            <path class="nose-plane" d="M170 129 L158 177 L170 185 L184 177" fill="none" stroke="#7cf5ff" stroke-opacity=".72" stroke-width="1.7"/>
+            <path class="cheek-plane" d="M108 151 L132 183 L155 192" fill="none" stroke="#5cecff" stroke-opacity=".44"/>
+            <path class="cheek-plane" d="M232 151 L208 183 L185 192" fill="none" stroke="#5cecff" stroke-opacity=".34"/>
+            <path class="mouth" d="M137 207 Q170 220 203 207 Q170 232 137 207Z" fill="#07101d" stroke="#75f7ff" stroke-width="1.5"/>
+            <path class="jaw-light" d="M108 190 Q121 231 170 249 Q219 231 232 190" fill="none" stroke="#70f4ff" stroke-opacity=".62" stroke-width="2"/>
+
+            <g class="temple-circuits" fill="none" stroke="#89faff" stroke-width="1.2">
+              <path d="M96 104 L72 104 L62 93 L45 93"/><path d="M244 104 L268 104 L278 93 L295 93"/>
+              <path d="M101 170 L75 170 L64 181 L48 181"/><path d="M239 170 L265 170 L276 181 L292 181"/>
+            </g>
+            <g class="circuit-nodes" fill="#9ffbff" filter="url(#avatarGlow)">
+              <circle cx="45" cy="93" r="3"/><circle cx="48" cy="181" r="3"/><circle cx="295" cy="93" r="3"/><circle cx="292" cy="181" r="3"/>
+            </g>
+
+            <circle class="chest-light" cx="170" cy="340" r="55" fill="url(#chestCore)" filter="url(#softGlow)"/>
+            <circle cx="170" cy="340" r="18" fill="none" stroke="#caffff" stroke-width="2"/>
+            <path d="M170 322 L185 349 L155 349Z" fill="none" stroke="#e1ffff" stroke-width="2"/>
+            <path class="body-circuit" d="M170 358 L170 408 M151 351 L100 382 M189 351 L240 382" fill="none" stroke="#58eaff" stroke-opacity=".56" stroke-width="1.4"/>
+          </g>
+
+          <g class="avatar-scan" aria-hidden="true">
+            <rect x="62" y="20" width="216" height="4" rx="2" fill="#cbffff" filter="url(#avatarGlow)"/>
+            <rect x="80" y="27" width="180" height="24" fill="#55efff" opacity=".08"/>
+          </g>
+        </svg>
+        <div class="avatar-code code-left">NEURAL LATTICE<br>SYNC 99.7%<br>VOICE ONLINE</div>
+        <div class="avatar-code code-right">LOCAL CORE<br>HUMAN AUTHORITY<br>OBSIDIAN-01</div>
       </div>
       <div class="identity">
         <span>ARTIFICIAL DEVELOPMENT INTELLIGENCE</span>
@@ -102,4 +193,3 @@
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
-
