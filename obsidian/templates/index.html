@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#02060d">
+  <title>OBSIDIAN // HoloLab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark"></span>OBSIDIAN <small>HOLOLAB</small></div>
+    <div class="system-state"><span class="state-dot"></span><span id="clock">INITIALIZING</span></div>
+  </header>
+
+  <main class="lab-shell" id="labShell">
+    <section class="holo-panel left-panel" data-panel="system">
+      <p class="eyebrow">SYSTEM MATRIX</p>
+      <h2>Local Core</h2>
+      <dl class="metrics">
+        <div><dt>STATE</dt><dd id="stateMetric">BOOTING</dd></div>
+        <div><dt>FILES</dt><dd id="fileMetric">—</dd></div>
+        <div><dt>MODULES</dt><dd id="moduleMetric">—</dd></div>
+        <div><dt>COMMANDS</dt><dd id="commandMetric">0</dd></div>
+      </dl>
+      <div class="signal-bars" aria-label="system activity">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </section>
+
+    <section class="core-stage" aria-label="Obsidian holographic core">
+      <div class="orbit orbit-a"></div>
+      <div class="orbit orbit-b"></div>
+      <div class="orbit orbit-c"></div>
+      <div class="holo-core" id="holoCore">
+        <div class="core-shell"></div>
+        <div class="core-eye"></div>
+        <div class="core-grid"></div>
+      </div>
+      <div class="identity">
+        <span>ARTIFICIAL DEVELOPMENT INTELLIGENCE</span>
+        <h1>OBSIDIAN</h1>
+        <p id="modeLabel">LOCAL DEMONSTRATION MODE</p>
+      </div>
+    </section>
+
+    <section class="holo-panel right-panel" data-panel="project">
+      <p class="eyebrow">PROJECT CONSTELLATION</p>
+      <h2>Repository Graph</h2>
+      <div class="project-graph" id="projectGraph">
+        <button class="graph-node primary" data-command="scan project">CORE</button>
+        <button class="graph-node n1" data-command="diagnose code">DEBUG</button>
+        <button class="graph-node n2" data-command="show lineage">LINEAGE</button>
+        <button class="graph-node n3" data-command="open hololab">LAB</button>
+        <button class="graph-node n4" data-command="status">SYSTEM</button>
+        <svg viewBox="0 0 300 230" aria-hidden="true">
+          <line x1="150" y1="115" x2="65" y2="50"/><line x1="150" y1="115" x2="235" y2="50"/>
+          <line x1="150" y1="115" x2="65" y2="185"/><line x1="150" y1="115" x2="235" y2="185"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="holo-panel lineage-panel" data-panel="lineage">
+      <p class="eyebrow">EVOLUTION LINE</p>
+      <div class="lineage-flow">
+        <span>ASSIST</span><b>›</b><span>DEBUG</span><b>›</b><span>RL</span><b>›</b><span>SWARM</span><b>›</b><strong>OBSIDIAN</strong>
+      </div>
+    </section>
+
+    <section class="holo-panel diagnostic-panel" data-panel="diagnostics">
+      <p class="eyebrow">DIAGNOSTIC CHAMBER</p>
+      <div id="diagnosticContent" class="diagnostic-content">
+        <span>AWAITING CODE SWEEP</span>
+      </div>
+    </section>
+
+    <section class="console-panel">
+      <div class="conversation" id="conversation" aria-live="polite">
+        <div class="message obsidian"><span>OBSIDIAN</span>HoloLab online. Say or type a command.</div>
+      </div>
+      <form id="commandForm" class="command-form">
+        <button type="button" id="micButton" class="icon-button" aria-label="Start voice command">◉</button>
+        <input id="commandInput" autocomplete="off" placeholder="Ask Obsidian to scan, diagnose, expand the lab…" aria-label="Command">
+        <button type="submit" class="send-button">EXECUTE</button>
+      </form>
+      <div class="quick-actions">
+        <button data-command="status">SYSTEM STATUS</button>
+        <button data-command="scan project">SCAN PROJECT</button>
+        <button data-command="diagnose code">DIAGNOSE</button>
+        <button data-command="open hololab">EXPAND LAB</button>
+        <button data-command="show lineage">LINEAGE</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    SCREEN-BASED HOLOGRAPHIC INTERFACE // LOCAL-FIRST // HUMAN AUTHORITY REQUIRED
+  </footer>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+
